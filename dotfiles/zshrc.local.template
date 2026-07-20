@@ -1,0 +1,9 @@
+# ~/.zshrc.local — untracked, machine/org-specific overrides.
+# Sourced at the end of ~/.zshrc. Copied from oh-my-terminal's template; edit freely.
+
+# Route the GitHub CLI at a GitHub Enterprise host by default.
+# (Use `gh --hostname github.com ...` for public GitHub.)
+# export GH_HOST=your-org.ghe.com
+
+# Extra PATH entries, aliases, or exports specific to this machine:
+# export PATH="$HOME/some/tool/bin:$PATH"

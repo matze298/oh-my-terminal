@@ -1,0 +1,60 @@
+# =============================================================================
+# Example ~/.zshrc  —  reference for reproducing this setup on a new machine.
+#
+# This is NOT meant to be run as-is. Copy the parts you want into your own
+# ~/.zshrc and adjust paths. Companion to Setup-Inventory.md and
+# Zsh-Setup-Reference.md in this vault.
+#
+# Assumes: Ubuntu, oh-my-zsh installed, and the tools from the toolkit notes.
+# =============================================================================
+
+# --- PATH ---------------------------------------------------------------------
+# Tools installed via `uv tool` / official installers land in ~/.local/bin;
+# `go install` binaries land in ~/go/bin. zsh doesn't add these by default.
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# --- oh-my-zsh ----------------------------------------------------------------
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="agnoster"                       # Powerline prompt; needs a Nerd Font
+
+# git            -> gst, gco, gp, gl, ... aliases
+# autosuggestions/syntax-highlighting are cloned into $ZSH/custom/plugins/
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  web-search                               # `google <query>` etc.
+  copypath
+  copyfile
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# --- modern replacements for coreutils ---------------------------------------
+alias bat='batcat'                         # Ubuntu ships bat as `batcat`
+alias ls='eza --icons --color=auto --group-directories-first'
+alias ll='eza -alF --icons --color=auto --group-directories-first'
+eval "$(zoxide init zsh)"                  # `z <frag>` to jump, `zi` to pick
+
+# --- fuzzy finding (fzf + fd) -------------------------------------------------
+# fzf installed from git (~/.fzf). The installer wrote ~/.fzf.zsh, which puts
+# ~/.fzf/bin on PATH and loads key-bindings + completion in one line.
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# Equivalent once fzf is on PATH (fzf >= 0.48): source <(fzf --zsh)
+
+alias fd='fdfind'                          # Ubuntu ships fd as `fdfind`
+
+# Make fzf use fd (fast, respects .gitignore) and preview files with bat.
+export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fdfind --type d --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS="--height 60% --layout reverse --border \
+  --preview 'batcat --color=always --style=numbers {} 2>/dev/null | head -200'"
+
+# --- smarter shell history (atuin) -------------------------------------------
+# Rebinds Ctrl-R to atuin's search. --disable-up-arrow keeps plain up-arrow for
+# normal line recall. Keep this LAST so it wins the Ctrl-R binding.
+eval "$(atuin init zsh --disable-up-arrow)"
+
+# --- misc ---------------------------------------------------------------------
+export CLAUDE_CODE_DISABLE_MOUSE=1

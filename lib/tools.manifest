@@ -1,0 +1,61 @@
+# oh-my-terminal tool manifest — the single source of truth.
+#
+# One tool per line, fields separated by '|':
+#   id | category | check | method | arg | default | desc
+#
+#   check   : shell snippet that exits 0 iff the tool is already installed
+#             (must not contain a '|'; use a helper function if needed)
+#   method  : apt | uv | go | special
+#   arg     : apt package / uv args / go module / special-installer suffix
+#   default : core (pre-selected) | opt (opt-in)
+#
+# Lines starting with '#' and blank lines are ignored.
+
+# --- Shell foundation ---
+zsh|Shell foundation|command -v zsh|apt|zsh|core|The zsh shell itself
+oh-my-zsh|Shell foundation|[ -d "$HOME/.oh-my-zsh" ]|special|ohmyzsh|core|zsh framework (plugins, themes, agnoster prompt)
+nerd-font|Shell foundation|check_nerdfont|special|nerdfont|core|FiraCode Nerd Font (icons + ligatures)
+zsh-autosuggestions|Shell foundation|[ -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]|special|zsh_autosuggestions|core|Inline greyed-out history suggestions
+zsh-syntax-highlighting|Shell foundation|[ -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]|special|zsh_syntax_highlighting|core|Colors commands valid/invalid as you type
+
+# --- Core CLI ---
+zoxide|Core CLI|command -v zoxide|special|zoxide|core|Smarter cd by frecency (z, zi)
+eza|Core CLI|command -v eza|special|eza|core|Modern ls with icons + git (ls, ll)
+bat|Core CLI|command -v bat|special|bat|core|cat with syntax highlighting
+ripgrep|Core CLI|command -v rg|apt|ripgrep|core|Very fast recursive search (rg)
+fd|Core CLI|command -v fd|special|fd|core|Fast, gitignore-aware find (fd)
+fzf|Core CLI|[ -f "$HOME/.fzf.zsh" ]|special|fzf|core|Fuzzy finder (ctrl-r/ctrl-t/alt-c)
+atuin|Core CLI|command -v atuin|special|atuin|core|Shell history in SQLite + fuzzy search
+tmux|Core CLI|command -v tmux|apt|tmux|core|Terminal multiplexer
+jq|Core CLI|command -v jq|apt|jq|core|Command-line JSON processor
+
+# --- Git & dev ---
+git|Git & dev|command -v git|apt|git|core|Version control
+git-lfs|Git & dev|command -v git-lfs|special|gitlfs|core|Large-file storage
+gh|Git & dev|command -v gh|special|gh|core|GitHub CLI (PRs, auth, credential helper)
+direnv|Git & dev|command -v direnv|special|direnv|core|Auto-load project env on cd (.envrc)
+delta|Git & dev|command -v delta|special|delta|core|Syntax-highlighted git diffs (used by .gitconfig)
+lazygit|Git & dev|command -v lazygit|special|lazygit|opt|Full-screen git TUI
+just|Git & dev|command -v just|special|just|opt|Per-repo command runner (friendlier make)
+
+# --- Python & data ---
+uv|Python & data|command -v uv|special|uv|core|Fast Python package/venv/tool manager
+duckdb|Python & data|command -v duckdb|special|duckdb|opt|In-process SQL over Parquet/CSV/S3
+visidata|Python & data|command -v vd|uv|--with pyarrow --with pandas visidata|opt|Terminal spreadsheet for tabular files (vd)
+s5cmd|Python & data|command -v s5cmd|go|github.com/peak/s5cmd/v2@latest|opt|Fast parallel S3 transfers
+
+# --- Kubernetes ---
+kubectl|Kubernetes|command -v kubectl|special|kubectl|core|The Kubernetes CLI
+helm|Kubernetes|command -v helm|special|helm|core|Kubernetes package manager (charts)
+kustomize|Kubernetes|command -v kustomize|special|kustomize|core|Template-free manifest customization
+k9s|Kubernetes|command -v k9s|special|k9s|opt|TUI cockpit for pods/logs/exec
+stern|Kubernetes|command -v stern|go|github.com/stern/stern@latest|opt|Tail logs across many pods at once
+kubectx|Kubernetes|command -v kubectx|apt|kubectx|opt|Fast context/namespace switching
+
+# --- Monitoring ---
+btop|Monitoring|command -v btop|special|btop|core|CPU/RAM/process/disk TUI monitor
+nvtop|Monitoring|command -v nvtop|apt|nvtop|opt|htop-style GPU monitor
+nvitop|Monitoring|command -v nvitop|uv|nvitop|opt|Richer GPU/process view
+
+# --- Languages ---
+go|Languages|command -v go|apt|golang-go|opt|Go toolchain (needed by s5cmd/stern)

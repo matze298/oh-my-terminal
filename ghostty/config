@@ -1,0 +1,28 @@
+# ~/.config/ghostty/config — installed by oh-my-terminal's ghostty module.
+# Reload live with ctrl+shift+, ; inspect with `ghostty +show-config`.
+
+theme = Catppuccin Mocha
+
+# --- Appearance ---
+background-opacity = 0.85
+background-blur = 20
+window-padding-x = 10
+window-padding-y = 8
+cursor-style = block
+mouse-hide-while-typing = true
+font-family = FiraCode Nerd Font
+copy-on-select = clipboard
+
+# --- Scrollback + readability ---
+scrollback-limit = 10000000     # ~10MB of history
+minimum-contrast = 1.1          # keep text legible even with bad app colors
+
+# --- Keybinds ---
+# ctrl+alt+arrows collides with the OS workspace switcher, so remap split nav:
+keybind = super+ctrl+arrow_left=goto_split:left
+keybind = super+ctrl+arrow_right=goto_split:right
+keybind = super+ctrl+arrow_up=goto_split:up
+keybind = super+ctrl+arrow_down=goto_split:down
+
+# --- Custom shaders (optional) ---
+# custom-shader = ~/.config/ghostty/shaders/shader.glsl

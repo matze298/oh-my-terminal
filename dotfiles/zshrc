@@ -1,0 +1,61 @@
+# ~/.zshrc — managed by oh-my-terminal.
+# Machine/org-specific overrides go in ~/.zshrc.local (untracked).
+
+# --- PATH: user-local and Go binaries ---
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# --- oh-my-zsh ---
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="agnoster"                       # Powerline prompt; needs a Nerd Font
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  web-search                               # `google <query>` etc.
+  copypath
+  copyfile
+)
+source "$ZSH/oh-my-zsh.sh"
+
+# --- modern coreutils replacements ---
+# eza replaces ls; bat/fd are named bat/fd (upstream) or batcat/fdfind (apt).
+if command -v eza >/dev/null; then
+  alias ls='eza --icons --color=auto --group-directories-first'
+  alias ll='eza -alF --icons --color=auto --group-directories-first'
+fi
+if command -v batcat >/dev/null && ! command -v bat >/dev/null; then alias bat='batcat'; fi
+if command -v fdfind >/dev/null && ! command -v fd  >/dev/null; then alias fd='fdfind'; fi
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"   # `z <frag>` / `zi`
+
+# --- fuzzy finding (fzf + fd) ---
+if [ -f ~/.fzf.zsh ]; then
+  source ~/.fzf.zsh                          # fzf installed from git
+else                                         # apt fzf ships integration here
+  [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+  [ -f /usr/share/doc/fzf/examples/completion.zsh ]   && source /usr/share/doc/fzf/examples/completion.zsh
+fi
+
+# Point fzf at fd (fast, .gitignore-aware) and preview with bat, whichever name exists.
+_omt_fd="$(command -v fd || command -v fdfind)"
+_omt_bat="$(command -v bat || command -v batcat)"
+if [ -n "$_omt_fd" ]; then
+  export FZF_DEFAULT_COMMAND="$_omt_fd --type f --hidden --follow --exclude .git"
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND="$_omt_fd --type d --hidden --follow --exclude .git"
+fi
+if [ -n "$_omt_bat" ]; then
+  export FZF_DEFAULT_OPTS="--height 60% --layout reverse --border --preview '$_omt_bat --color=always --style=numbers {} 2>/dev/null | head -200'"
+else
+  export FZF_DEFAULT_OPTS="--height 60% --layout reverse --border"
+fi
+unset _omt_fd _omt_bat
+
+# --- Claude Code ---
+export CLAUDE_CODE_DISABLE_MOUSE=1
+
+# --- smarter history (atuin) — keep LAST so it wins the ctrl-r binding ---
+[ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
+command -v atuin >/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
+
+# --- local, untracked overrides (identity, GH_HOST, machine-specific) ---
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

@@ -1,0 +1,28 @@
+# ~/.gitconfig — managed by oh-my-terminal.
+# Identity (user.name / user.email) lives in ~/.gitconfig.local (untracked),
+# pulled in by the include below. gh credential helpers are configured per host
+# by `gh auth setup-git`, so they are intentionally not hardcoded here.
+
+[include]
+    path = ~/.gitconfig.local
+
+[core]
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true          # n / N jump between files in the diff
+    line-numbers = true
+    side-by-side = true
+    syntax-theme = Nord
+[merge]
+    conflictStyle = zdiff3   # clearer conflict markers
+[diff]
+    colorMoved = default     # highlight moved lines distinctly
+[push]
+    autoSetupRemote = true
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
