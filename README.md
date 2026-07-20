@@ -10,7 +10,7 @@ the backbone of the shell layer here.
 ## Quickstart
 
 ```sh
-git clone https://github.com/<you>/oh-my-terminal.git
+git clone https://github.com/matze298/oh-my-terminal.git
 cd oh-my-terminal
 ./setup.sh
 ```
