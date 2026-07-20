@@ -129,6 +129,7 @@ confirm() {
 
 install_selected() {
   local i ok_list=() fail_list=()
+  mkdir -p "$HOME/.local/bin"   # several installers drop binaries here
   for i in "${!IDS[@]}"; do
     [ "${SELECTED[$i]}" = 1 ] || continue
     info "Installing ${IDS[$i]}"

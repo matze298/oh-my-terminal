@@ -50,9 +50,6 @@ else
 fi
 unset _omt_fd _omt_bat
 
-# --- Claude Code ---
-export CLAUDE_CODE_DISABLE_MOUSE=1
-
 # --- smarter history (atuin) — keep LAST so it wins the ctrl-r binding ---
 [ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
 command -v atuin >/dev/null && eval "$(atuin init zsh --disable-up-arrow)"
