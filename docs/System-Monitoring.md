@@ -147,10 +147,11 @@ nvitop -u $USER
 Most useful in-app keys:
 
 - `a` / `f` / `c`: switch to auto, full, or compact display mode
-- `Up`/`Down`, `Tab`: select a process and switch panels
+- `Up`/`Down`: select a process
 - `T` / `K` / `I`: send SIGTERM / SIGKILL / SIGINT to the selected process
 - `e`: show the selected process's environment variables
-- `h`: help, `q`: quit
+- `t`: toggle tree view, `,` / `.` choose sort column, `/` reverse sort order
+- `h` or `?`: help, `q`: quit
 
 > [!tip] On a shared node, `nvitop -u $USER` shows only your processes so you can reclaim your own leaked GPU memory without touching a colleague's job. Press `e` on a process to confirm its `CUDA_VISIBLE_DEVICES` before you send a signal.
 

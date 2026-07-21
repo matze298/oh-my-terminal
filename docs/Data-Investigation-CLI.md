@@ -224,7 +224,7 @@ kubectl get pods -o json | jq -r '.items[] | [.metadata.name, .status.phase] | @
 csvlens -d ';' export.csv
 ```
 
-> [!tip] Inside csvlens, press `/` to search rows, `?` to search and filter to matching rows only, and `Shift`+`g` to jump to the last row. Use the arrow keys or `hjkl` to move around wide tables.
+> [!tip] Inside csvlens, press `/<regex>` to find and highlight matches (`n`/`N` to step through them), and `&<regex>` to filter the view down to matching rows only. Use the arrow keys or `hjkl` to move around wide tables.
 
 Docs: [csvlens docs](https://github.com/YS-L/csvlens#readme)
 
