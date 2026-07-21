@@ -142,22 +142,9 @@ eval "$(atuin init zsh --disable-up-arrow)"
 
 ---
 
-## 4. Bonus — GPU monitors for the DL box
+## 4. Bonus — system & GPU monitors
 
-`btop` (you have it) covers CPU/RAM. For your NVIDIA GPU during training:
-
-| Tool     | Install                  | Why                                                                |
-| -------- | ------------------------ | ------------------------------------------------------------------ |
-| `nvtop`  | `sudo apt install nvtop` | `htop`-style TUI for GPU util, memory, per-process VRAM            |
-| `nvitop` | `uv tool install nvitop` | Richer view: tree of GPU processes, colored bars, `nvitop -m full` |
-
-```sh
-nvtop            # live GPU dashboard
-nvitop           # or the fancier one
-watch -n1 nvidia-smi   # the no-install fallback
-```
-
-- [x] Run `nvtop` while a training job is active
+CPU/RAM/disk (`btop`), disk usage (`dust`/`duf`), processes (`procs`), and the GPU monitors (`nvtop`, `nvitop`) each get a hands-on section in their own note: see [[System-Monitoring]]. The no-install GPU fallback is always `watch -n1 nvidia-smi`.
 
 ---
 

@@ -106,4 +106,31 @@ Zero utilization usually means the job is stuck in data loading or hasn't reache
 
 ---
 
-**Next:** back to index [[Terminal-Toolkit]] · related: [[Data-Investigation-CLI]]
+## kubecolor — colorized kubectl output
+
+kubecolor wraps `kubectl` and colorizes its output so pod states, namespaces, and columns are easier to scan while you triage. You use it exactly like `kubectl`, and this repo's `~/.zshrc` already aliases `kubectl=kubecolor` when it is present. Installed by the repo's `setup.sh`.
+
+```sh
+# List pods with colorized STATUS and READY columns
+kubecolor get pods -n kubeflow
+
+# Watch pods refresh in place, still colorized
+kubecolor get pods -n kubeflow -w
+
+# Inspect a single pod, events and conditions stand out
+kubecolor describe pod ml-pipeline-0 -n kubeflow
+
+# Wide output with node and IP, colors intact
+kubecolor get pods -n kubeflow -o wide
+
+# Force colors when piping into a pager
+kubecolor --force-colors get pods -n kubeflow | less -R
+```
+
+> [!tip] kubecolor auto-detects pipes and non-TTY output and passes kubectl's text through uncolored, so scripts and `| jq`, `| grep`, `| awk` keep working unchanged. When you do want color through a pipe (for example into `less -R`), add `kubecolor --force-colors`.
+
+Docs: [kubecolor docs](https://kubecolor.github.io/)
+
+---
+
+**Next:** back to index [[Terminal-Toolkit]] · related: [[Data-Investigation-CLI]] · [[Kubernetes-Packaging]] · [[Switching-Contexts-Optional]]

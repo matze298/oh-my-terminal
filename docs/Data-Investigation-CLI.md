@@ -137,4 +137,97 @@ s5cmd --dry-run cp 's3://.../*' ./data/                  # preview, transfer not
 
 ---
 
+## jq — command-line JSON processor
+
+`jq` slices, filters, and transforms JSON with a small expression language, which makes it your default lens on API responses and `kubectl -o json` output. Installed by the repo's `setup.sh`.
+
+```sh
+# Pretty-print (and validate) a JSON file
+jq . response.json
+
+# Pull one field as raw text, no surrounding quotes
+jq -r '.metadata.name' pod.json
+
+# Filter an array, then project two fields into a compact object
+kubectl get pods -o json | jq '.items[] | select(.status.phase != "Running") | {name: .metadata.name, phase: .status.phase}'
+
+# Build a TSV row per item for downstream tools
+kubectl get nodes -o json | jq -r '.items[] | [.metadata.name, .status.nodeInfo.kubeletVersion] | @tsv'
+
+# Count items grouped by a key
+jq -r 'group_by(.status.phase) | map({phase: .[0].status.phase, count: length})' pods.json
+```
+
+> [!tip] Pass shell values in safely with `--arg` (string) or `--argjson` (parsed JSON) instead of interpolating into the filter, e.g. `jq --arg ns prod '.items[] | select(.metadata.namespace == $ns)'`.
+
+Docs: [jq manual](https://jqlang.org/manual/)
+
+## yq — jq for YAML
+
+`yq` (mikefarah/yq) brings jq-style expressions to YAML, so you can read and edit Kubernetes manifests and Helm values in place. It also converts between YAML and JSON, which lets you round-trip manifests through the jq ecosystem. Installed by the repo's `setup.sh`.
+
+```sh
+# Read a nested field from a manifest
+yq '.spec.replicas' deployment.yaml
+
+# Convert YAML to JSON (then hand off to jq if you like)
+yq -o=json '.' values.yaml
+
+# Edit in place: bump the replica count
+yq -i '.spec.replicas = 5' deployment.yaml
+
+# Select containers and print their images across a multi-doc file
+yq '.spec.template.spec.containers[].image' deployment.yaml
+
+# Merge Helm values files, later files winning
+yq eval-all '. as $item ireduce ({}; . * $item)' base.yaml override.yaml
+```
+
+> [!tip] A multi-document manifest (objects separated by `---`) is handled with `yq ea` (`eval-all`) when you need to see or combine all documents at once rather than one at a time.
+
+Docs: [yq docs](https://mikefarah.gitbook.io/yq/)
+
+## jnv — interactive JSON viewer with live jq filtering
+
+`jnv` opens JSON in a TUI where you type a jq-style filter and see the result update live, which beats re-running `jq` while you hunt for the right path. Installed by the repo's `setup.sh`.
+
+```sh
+# Explore a JSON file interactively
+jnv response.json
+
+# Pipe live cluster state straight in
+kubectl get pods -o json | jnv
+
+# Inspect an API response without saving it first
+curl -s https://api.example.com/v1/items | jnv
+```
+
+> [!tip] Start broad with `.` to see the whole tree, then refine the filter incrementally (for example `.items[]` then `.items[].metadata`). The key completion helps you discover the structure as you type.
+
+Docs: [jnv docs](https://github.com/ynqa/jnv#readme)
+
+## csvlens — less for CSV/TSV tables
+
+`csvlens` is a terminal pager built for tabular data, giving you aligned columns, scrolling, and in-app search over CSV or TSV files without leaving the shell. Installed by the repo's `setup.sh`.
+
+```sh
+# Open a CSV with aligned columns
+csvlens data.csv
+
+# View a tab-separated file
+csvlens -d '\t' data.tsv
+
+# View jq-generated TSV via stdin (tell csvlens the delimiter)
+kubectl get pods -o json | jq -r '.items[] | [.metadata.name, .status.phase] | @tsv' | csvlens -d '\t'
+
+# Open a semicolon-delimited export
+csvlens -d ';' export.csv
+```
+
+> [!tip] Inside csvlens, press `/` to search rows, `?` to search and filter to matching rows only, and `Shift`+`g` to jump to the last row. Use the arrow keys or `hjkl` to move around wide tables.
+
+Docs: [csvlens docs](https://github.com/YS-L/csvlens#readme)
+
+---
+
 **Next:** [[Inspecting-Kubeflow-Pods]] · back to index [[Terminal-Toolkit]]

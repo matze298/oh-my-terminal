@@ -6,14 +6,21 @@ Install any subset with the interactive `setup.sh` at the repo root, the notes b
 
 ## The notes (portable core)
 
-| Note                         | Tools                     | What it gives you                                                   |
-| ---------------------------- | ------------------------- | ------------------------------------------------------------------- |
-| [[Setup-Inventory]]          | (everything, at a glance) | Full parts list + links to reproduce this setup on a new laptop     |
-| [[Zsh-Setup-Reference]]      | (your current setup)      | What's already active + the PATH lines the rest need                |
-| [[Shell-Power-Layer]]        | fzf · fd · atuin          | Fuzzy history/files/dirs + a real history database — **start here** |
-| [[Git-and-Dev-Flow]]         | delta · lazygit · just    | Readable diffs, a git TUI, a per-repo command runner                |
-| [[Data-Investigation-CLI]]   | duckdb · visidata · s5cmd | Inspect Parquet/CSV/S3 and pull training data fast                  |
-| [[Inspecting-Kubeflow-Pods]] | kubectl · k9s · stern     | Debug the pods running your pipeline steps                          |
+| Note | Tools | What it gives you |
+|---|---|---|
+| [[Setup-Inventory]] | (everything, at a glance) | Full parts list + Core/Opt tiers to reproduce this setup |
+| [[Zsh-Setup-Reference]] | zsh · oh-my-zsh · agnoster · starship · Nerd Font | The shell foundation and prompt |
+| [[Everyday-CLI]] | zoxide · eza · bat · ripgrep · sd · tealdeer | Friendlier coreutils for daily work |
+| [[Shell-Power-Layer]] | fzf · fd · atuin | Fuzzy history/files/dirs + a real history database, **start here** |
+| [[Sessions-and-Files]] | tmux · zellij · yazi | Persistent SSH sessions and a file manager |
+| [[Git-and-Dev-Flow]] | git · git-lfs · gh · delta · lazygit · just · hyperfine | Version control, readable diffs, a git TUI, benchmarking |
+| [[Data-Investigation-CLI]] | jq · yq · jnv · duckdb · visidata · s5cmd · csvlens | Inspect JSON/YAML and Parquet/CSV/S3 |
+| [[Inspecting-Kubeflow-Pods]] | kubectl · kubecolor · k9s · stern | Debug the pods running your pipeline steps |
+| [[Kubernetes-Packaging]] | helm · kustomize | Render and diff manifests before applying |
+| [[Switching-Contexts-Optional]] | kubectx · kubens | Hop between clusters/namespaces |
+| [[System-Monitoring]] | btop · dust · duf · procs · nvtop · nvitop | System and GPU resource monitors |
+| [[Containers]] | lazydocker · dive | Docker TUI and image-layer inspection |
+| [[Python-and-Runtimes]] | uv · go | Python env management and the Go toolchain |
 
 ## Terminal emulator (environment-specific)
 

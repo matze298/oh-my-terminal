@@ -60,12 +60,19 @@ nav:
   - Home: index.md
   - Overview: Terminal-Toolkit.md
   - Setup Inventory: Setup-Inventory.md
-  - Zsh Setup Reference: Zsh-Setup-Reference.md
+  - Shell & prompt: Zsh-Setup-Reference.md
+  - Everyday CLI: Everyday-CLI.md
   - Shell Power Layer: Shell-Power-Layer.md
+  - Sessions & Files: Sessions-and-Files.md
   - Git & Dev Flow: Git-and-Dev-Flow.md
   - Data Investigation CLI: Data-Investigation-CLI.md
-  - Inspecting Kubeflow Pods: Inspecting-Kubeflow-Pods.md
-  - Switching Contexts: Switching-Contexts-Optional.md
+  - Kubernetes:
+      - Inspecting Kubeflow Pods: Inspecting-Kubeflow-Pods.md
+      - Kubernetes Packaging: Kubernetes-Packaging.md
+      - Switching Contexts: Switching-Contexts-Optional.md
+  - System Monitoring: System-Monitoring.md
+  - Containers: Containers.md
+  - Python & Runtimes: Python-and-Runtimes.md
   - Ghostty:
       - Hands-On Intro: Ghostty-Hands-On-Intro.md
       - Config Starter: Ghostty-Config-Starter.md
