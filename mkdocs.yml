@@ -1,0 +1,71 @@
+site_name: oh-my-terminal
+site_description: A portable, reproducible terminal setup (zsh + modern CLI tools).
+repo_url: https://github.com/matze298/oh-my-terminal
+repo_name: matze298/oh-my-terminal
+docs_dir: docs
+
+# docs/superpowers/ holds local-only working artifacts (gitignored); never publish.
+exclude_docs: |
+  superpowers/
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.top
+    - navigation.tracking
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+  - callouts          # Obsidian > [!note] blocks -> Material admonitions
+  - roamlinks         # Obsidian [[wikilinks]] -> relative links
+
+nav:
+  - Home: index.md
+  - Overview: Terminal-Toolkit.md
+  - Setup Inventory: Setup-Inventory.md
+  - Zsh Setup Reference: Zsh-Setup-Reference.md
+  - Shell Power Layer: Shell-Power-Layer.md
+  - Git & Dev Flow: Git-and-Dev-Flow.md
+  - Data Investigation CLI: Data-Investigation-CLI.md
+  - Inspecting Kubeflow Pods: Inspecting-Kubeflow-Pods.md
+  - Switching Contexts: Switching-Contexts-Optional.md
+  - Ghostty:
+      - Hands-On Intro: Ghostty-Hands-On-Intro.md
+      - Config Starter: Ghostty-Config-Starter.md

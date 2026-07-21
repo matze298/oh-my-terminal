@@ -111,6 +111,11 @@ The [`docs/`](docs/) folder holds the how-to notes the toolkit is based on.
 [`docs/Setup-Inventory.md`](docs/Setup-Inventory.md) is the annotated parts list;
 [`docs/Terminal-Toolkit.md`](docs/Terminal-Toolkit.md) is the index.
 
+They are published as a site at **https://matze298.github.io/oh-my-terminal/**,
+built with MkDocs Material and deployed by GitHub Actions
+([`.github/workflows/docs.yml`](.github/workflows/docs.yml)) on every push to
+`main` that touches `docs/` or `mkdocs.yml`.
+
 ## Extending
 
 - **Add a tool**: one line in `lib/tools.manifest`. Use an existing `method`
