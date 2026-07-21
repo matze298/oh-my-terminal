@@ -25,22 +25,21 @@ Not part of the portable toolkit. Use Ghostty on **Linux/macOS**; on **WSL** dri
 2. **[[Git-and-Dev-Flow]]** — daily git becomes readable and fast.
 3. Then **[[Data-Investigation-CLI]]** and **[[Inspecting-Kubeflow-Pods]]** as your work needs them.
 
-## Already installed on this box
+## Tools at a glance
 
-`zoxide` · `eza` · `bat` (batcat) · `ripgrep` · `tmux` · `jq` · `yq` · `jnv` · `dust` · `gh` · `helm` · `kustomize` · `direnv` · `uv` · `btop` · `kubectl`
+Everything the installer can set up, grouped by what it helps with (full
+descriptions in [[Setup-Inventory]]; core vs opt tiers in `lib/tools.manifest`):
 
-## Worth trying next
+- **Shell & prompt**: zsh · oh-my-zsh · agnoster · Nerd Font · zsh-autosuggestions · zsh-syntax-highlighting · starship
+- **Navigation & files**: zoxide · eza · bat · fd · fzf · yazi
+- **Search & text**: ripgrep · sd · jq · yq · jnv
+- **Sessions**: tmux · zellij
+- **History & discovery**: atuin · tealdeer
+- **Git & dev**: git · git-lfs · gh · delta · lazygit · just · direnv · hyperfine
+- **Python & data**: uv · duckdb · visidata · csvlens · s5cmd
+- **Kubernetes**: kubectl · helm · kustomize · kubecolor · k9s · stern · kubectx
+- **Containers**: lazydocker · dive
+- **System & GPU**: btop · dust · duf · procs · nvtop · nvitop
 
-Extras beyond the core notes, grouped by what they help with (full descriptions in [[Setup-Inventory]]):
-
-- **Shell & prompt**: `starship` (fast cross-shell prompt: git, k8s context, venv).
-- **Text & data**: `yq` (jq for YAML), `jnv` (interactive JSON), `sd` (friendlier sed), `csvlens` (CSV viewer), `hyperfine` (benchmarking).
-- **System**: `dust`/`duf` (disk usage/free), `procs` (modern ps).
-- **Kubernetes**: `kubecolor` (colorized `kubectl`).
-- **Containers**: `lazydocker` (Docker TUI), `dive` (image-layer inspector).
-- **Sessions & files**: `zellij` (tmux alternative), `yazi` (file manager).
-- **Discovery**: `tealdeer` (`tldr` cheat-sheets).
-
-## Optional
-
-- [[Switching-Contexts-Optional]] — `kubectx`/`kubens` for hopping between multiple clusters/namespaces. Only worth it if you juggle more than one.
+`kubectx`/`kubens` are only worth it if you juggle more than one cluster or
+namespace, see [[Switching-Contexts-Optional]].
