@@ -5,6 +5,7 @@
 > **Legend:** ✅ installed on this machine · ➕ recommended, not yet installed
 > **Base:** Ubuntu 24.04 · zsh `5.9`
 > **Portable core:** the shell + CLI tools below run the same on native Ubuntu, WSL, or a remote server. The terminal *emulator* is the one machine-specific layer (see the section right below).
+> **Fastest path:** run the interactive `setup.sh` at the repo root, it installs any subset of the tools below and lays down the configs. The steps in the tables and at the bottom are the manual equivalent.
 > Example shell config: [`zshrc.example`](zshrc.example)
 
 ## Terminal emulator (environment-specific)
@@ -110,6 +111,9 @@
 ---
 
 ## Rebuilding on a new laptop — order
+
+> [!tip] The short version
+> Clone the repo and run `./setup.sh` (Ghostty is the one opt-in extra: `./ghostty/install-ghostty.sh`). The manual sequence below is what the installer automates, useful when you want to do it by hand or understand what happens.
 
 1. Set up your terminal emulator (**Ghostty** on Linux/macOS; on **WSL** use the Windows host terminal). Install **zsh**, set it as default (`chsh -s $(which zsh)`), then install **oh-my-zsh** and a **Nerd Font**.
 2. Clone the two oh-my-zsh custom plugins (autosuggestions, syntax-highlighting), then adapt [`zshrc.example`](zshrc.example) into `~/.zshrc` and copy over `~/.gitconfig` and `~/.config/ghostty/config`.

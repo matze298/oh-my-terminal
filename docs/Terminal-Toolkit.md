@@ -1,6 +1,8 @@
 # 🧰 Terminal Toolkit — Index
 
-A curated, **portable** CLI stack for a cloud-focused **deep-learning engineer**. The shell and command-line tools below run the same on native Ubuntu, WSL, or a remote server. The terminal *emulator* ([[Ghostty-Hands-On-Intro|Ghostty]]) is a separate, environment-specific layer (Linux/macOS only) and lives in its own folder. Each note is hands-on and tuned to this setup.
+A curated, **portable** CLI stack for a cloud-focused **machine learning engineer**. The shell and command-line tools below run the same on native Ubuntu, WSL, or a remote server. The terminal *emulator* ([[Ghostty-Hands-On-Intro|Ghostty]]) is a separate, environment-specific layer (Linux/macOS only) and lives in its own folder. Each note is hands-on and tuned to this setup.
+
+Install any subset with the interactive `setup.sh` at the repo root, the notes below explain what each tool gives you and how to use it.
 
 ## The notes (portable core)
 

@@ -4,6 +4,13 @@ A portable, reproducible terminal setup: a zsh foundation plus a curated set of
 modern CLI tools, installed by an interactive script. These are the hands-on
 how-to notes the toolkit is based on.
 
+> [!note] Who this is for
+> Most of the tools are generally useful on any machine. The *selection* and the
+> how-to notes, though, are tailored toward a cloud-focused **machine learning
+> engineer**: inspecting data on S3/Parquet, debugging training pods on
+> Kubernetes, and watching GPUs. Take the generic core, skip the parts that do
+> not fit your work.
+
 - **New here?** Start with the [Terminal Toolkit overview](Terminal-Toolkit.md).
 - **Rebuilding a machine?** The [Setup Inventory](Setup-Inventory.md) is the full
   annotated parts list.
