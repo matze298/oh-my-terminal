@@ -23,6 +23,21 @@ gh_latest_tag() {  # repo -> latest release tag (e.g. v9.0.0 or 0.18.2)
     | grep -Po '"tag_name": *"\K[^"]*'
 }
 
+# repo, extended-regex -> first matching asset download URL of the latest release.
+# Robust to version strings embedded in asset names.
+gh_asset_url() {
+  curl -fsSL "https://api.github.com/repos/$1/releases/latest" \
+    | grep -Po '"browser_download_url": *"\K[^"]*' | grep -E "$2" | head -n1
+}
+
+# Install a single raw (uncompressed) release binary. Usage: _dl_rawbin <url> <dest>
+_dl_rawbin() {
+  local url=$1 dest=$2
+  mkdir -p "$HOME/.local/bin"
+  curl -fL "$url" -o "$HOME/.local/bin/$dest" || { err "download failed: $url"; return 1; }
+  chmod 755 "$HOME/.local/bin/$dest"
+}
+
 # Download an archive, find a binary by name inside it, install to ~/.local/bin.
 # Handles .tar.gz / .tbz / .zip. Usage: _dl_bin <url> <binary> [dest-name]
 _dl_bin() {
@@ -43,19 +58,29 @@ _dl_bin() {
 
 # --- shell foundation ---------------------------------------------------------
 install_special_ohmyzsh() {
+  # Already present (e.g. under --upgrade): pull instead of re-running installer.
+  if [ -d "$HOME/.oh-my-zsh" ]; then
+    git -C "$HOME/.oh-my-zsh" pull --ff-only >/dev/null 2>&1 || true
+    return 0
+  fi
   # Unattended: don't switch shell, don't run zsh, don't touch our ~/.zshrc.
   RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
+_clone_or_pull() {  # repo-url dir
+  if [ -d "$2" ]; then git -C "$2" pull --ff-only >/dev/null 2>&1 || true
+  else git clone --depth 1 "$1" "$2"; fi
+}
+
 install_special_zsh_autosuggestions() {
-  local dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
-  [ -d "$dir" ] || git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions "$dir"
+  _clone_or_pull https://github.com/zsh-users/zsh-autosuggestions \
+    "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
 }
 
 install_special_zsh_syntax_highlighting() {
-  local dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
-  [ -d "$dir" ] || git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting "$dir"
+  _clone_or_pull https://github.com/zsh-users/zsh-syntax-highlighting \
+    "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
 }
 
 install_special_nerdfont() {
@@ -82,12 +107,18 @@ install_special_eza() {
 
 install_special_bat() {
   local t; t="$(gh_latest_tag sharkdp/bat)"
-  _dl_bin "https://github.com/sharkdp/bat/releases/download/${t}/bat-${t}-${RUST_TRIPLE}.tar.gz" bat
+  _dl_bin "https://github.com/sharkdp/bat/releases/download/${t}/bat-${t}-${RUST_TRIPLE}.tar.gz" bat || return 1
+  # Drop apt's duplicate (installs as `batcat`) so there's a single `bat`.
+  dpkg -s bat >/dev/null 2>&1 && { step "removing apt 'bat' (batcat) in favor of upstream bat"; sudo apt-get remove -y -qq bat; }
+  return 0
 }
 
 install_special_fd() {
   local t; t="$(gh_latest_tag sharkdp/fd)"
-  _dl_bin "https://github.com/sharkdp/fd/releases/download/${t}/fd-${t}-${RUST_TRIPLE}.tar.gz" fd
+  _dl_bin "https://github.com/sharkdp/fd/releases/download/${t}/fd-${t}-${RUST_TRIPLE}.tar.gz" fd || return 1
+  # Drop apt's duplicate (installs as `fdfind`) so there's a single `fd`.
+  dpkg -s fd-find >/dev/null 2>&1 && { step "removing apt 'fd-find' (fdfind) in favor of upstream fd"; sudo apt-get remove -y -qq fd-find; }
+  return 0
 }
 
 install_special_fzf() {
@@ -185,4 +216,69 @@ install_special_k9s() {
 # --- monitoring ---------------------------------------------------------------
 install_special_btop() {
   _dl_bin "https://github.com/aristocratos/btop/releases/latest/download/btop-${BTOP_ARCH}.tbz" btop
+}
+
+install_special_dust() {
+  _dl_bin "$(gh_asset_url bootandy/dust "${RUST_TRIPLE}\.tar\.gz$")" dust
+}
+
+install_special_duf() {
+  _dl_bin "$(gh_asset_url muesli/duf "linux_${ARCH_M}\.tar\.gz$")" duf
+}
+
+install_special_procs() {
+  _dl_bin "$(gh_asset_url dalance/procs "${ARCH_M}-linux\.zip$")" procs
+}
+
+# --- data / json / yaml -------------------------------------------------------
+install_special_yq() {
+  _dl_rawbin "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${DEB_ARCH}" yq
+}
+
+install_special_jnv() {
+  _dl_bin "$(gh_asset_url ynqa/jnv "${RUST_TRIPLE}\.tar\.xz$")" jnv
+}
+
+install_special_csvlens() {
+  _dl_bin "$(gh_asset_url YS-L/csvlens "${RUST_TRIPLE}\.tar\.(gz|xz)$")" csvlens
+}
+
+# --- productivity -------------------------------------------------------------
+install_special_tealdeer() {
+  _dl_rawbin "$(gh_asset_url dbrgn/tealdeer "linux-${ARCH_M}-musl$")" tldr
+}
+
+install_special_sd() {
+  _dl_bin "$(gh_asset_url chmln/sd "${RUST_TRIPLE}\.tar\.gz$")" sd
+}
+
+install_special_hyperfine() {
+  _dl_bin "$(gh_asset_url sharkdp/hyperfine "${RUST_TRIPLE}\.tar\.gz$")" hyperfine
+}
+
+install_special_starship() {
+  curl -sS https://starship.rs/install.sh | sh -s -- -y -b "$HOME/.local/bin"
+}
+
+install_special_zellij() {
+  # Anchor on "zellij-<arch>" to avoid the separate "zellij-no-web-..." asset.
+  _dl_bin "$(gh_asset_url zellij-org/zellij "zellij-${ARCH_M}-unknown-linux-musl\.tar\.gz$")" zellij
+}
+
+install_special_yazi() {
+  _dl_bin "$(gh_asset_url sxyazi/yazi "${RUST_TRIPLE}\.zip$")" yazi
+}
+
+# --- containers ---------------------------------------------------------------
+install_special_lazydocker() {
+  _dl_bin "$(gh_asset_url jesseduffield/lazydocker "Linux_${REL_ARCH}\.tar\.gz$")" lazydocker
+}
+
+install_special_dive() {
+  _dl_bin "$(gh_asset_url wagoodman/dive "linux_${DEB_ARCH}\.tar\.gz$")" dive
+}
+
+# --- kubernetes (colorizer) ---------------------------------------------------
+install_special_kubecolor() {
+  _dl_bin "$(gh_asset_url kubecolor/kubecolor "linux_${DEB_ARCH}\.tar\.gz$")" kubecolor
 }

@@ -5,11 +5,15 @@
 # Dependency-free by design (a numbered toggle menu), so it works before any of
 # the tools it installs are present.
 
-# Initialize SELECTED: core tier pre-checked, opt tier off, installed skipped.
+# A tool is "locked" (skipped, not toggleable) only when it is installed and we
+# are not in upgrade mode.
+_omt_locked() { [ "${INSTALLED[$1]}" = 1 ] && [ "${UPGRADE:-0}" != 1 ]; }
+
+# Initialize SELECTED: core tier pre-checked, opt tier off, locked tools skipped.
 ui_init_selection() {
   local i
   for i in "${!IDS[@]}"; do
-    if [ "${INSTALLED[$i]}" = 1 ]; then
+    if _omt_locked "$i"; then
       SELECTED[$i]=0
     elif [ "${DEFAULTS[$i]}" = core ]; then
       SELECTED[$i]=1
@@ -21,7 +25,7 @@ ui_init_selection() {
 
 _ui_marker() {  # index -> "[x]" | "[ ]" | "[installed]"
   local i=$1
-  if [ "${INSTALLED[$i]}" = 1 ]; then printf '%s[installed]%s' "$C_DIM" "$C_RESET"
+  if _omt_locked "$i"; then printf '%s[installed]%s' "$C_DIM" "$C_RESET"
   elif [ "${SELECTED[$i]}" = 1 ]; then printf '%s[x]%s' "$C_GREEN$C_BOLD" "$C_RESET"
   else printf '[ ]'
   fi
@@ -31,6 +35,7 @@ ui_render() {
   local i cat last_cat=""
   printf '\n%sSelect tools to install%s  (%score%s = recommended defaults)\n' \
     "$C_BOLD" "$C_RESET" "$C_GREEN" "$C_RESET"
+  [ "${UPGRADE:-0}" = 1 ] && printf '%supgrade mode: installed tools can be reselected to reinstall the latest%s\n' "$C_YELLOW" "$C_RESET"
   printf '%s----------------------------------------------------------------%s\n' "$C_DIM" "$C_RESET"
   for i in "${!IDS[@]}"; do
     cat="${CATS[$i]}"
@@ -51,16 +56,16 @@ _ui_toggle() {  # index (1-based); no-op on installed items
   if [ "$i" -lt 0 ] || [ "$i" -ge "${#IDS[@]}" ]; then
     warn "ignoring out-of-range number: $n"; return
   fi
-  if [ "${INSTALLED[$i]}" = 1 ]; then
-    warn "${IDS[$i]} is already installed"; return
+  if _omt_locked "$i"; then
+    warn "${IDS[$i]} is already installed (use --upgrade to reinstall)"; return
   fi
   if [ "${SELECTED[$i]}" = 1 ]; then SELECTED[$i]=0; else SELECTED[$i]=1; fi
 }
 
-_ui_set_all() {  # value: 1 selects every non-installed tool, 0 clears
+_ui_set_all() {  # value: 1 selects every selectable tool, 0 clears
   local i val=$1
   for i in "${!IDS[@]}"; do
-    [ "${INSTALLED[$i]}" = 1 ] && { SELECTED[$i]=0; continue; }
+    _omt_locked "$i" && { SELECTED[$i]=0; continue; }
     SELECTED[$i]=$val
   done
 }
@@ -68,7 +73,7 @@ _ui_set_all() {  # value: 1 selects every non-installed tool, 0 clears
 _ui_set_core() {
   local i
   for i in "${!IDS[@]}"; do
-    if [ "${INSTALLED[$i]}" = 1 ]; then SELECTED[$i]=0
+    if _omt_locked "$i"; then SELECTED[$i]=0
     elif [ "${DEFAULTS[$i]}" = core ]; then SELECTED[$i]=1
     else SELECTED[$i]=0; fi
   done

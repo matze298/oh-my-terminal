@@ -17,6 +17,7 @@ oh-my-zsh|Shell foundation|[ -d "$HOME/.oh-my-zsh" ]|special|ohmyzsh|core|zsh fr
 nerd-font|Shell foundation|check_nerdfont|special|nerdfont|core|FiraCode Nerd Font (icons + ligatures)
 zsh-autosuggestions|Shell foundation|[ -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]|special|zsh_autosuggestions|core|Inline greyed-out history suggestions
 zsh-syntax-highlighting|Shell foundation|[ -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]|special|zsh_syntax_highlighting|core|Colors commands valid/invalid as you type
+starship|Shell foundation|command -v starship|special|starship|opt|Fast cross-shell prompt (git, kube-context, venv); replaces agnoster when present
 
 # --- Core CLI ---
 zoxide|Core CLI|command -v zoxide|special|zoxide|core|Smarter cd by frecency (z, zi)
@@ -28,6 +29,13 @@ fzf|Core CLI|[ -f "$HOME/.fzf.zsh" ]|special|fzf|core|Fuzzy finder (ctrl-r/ctrl-
 atuin|Core CLI|command -v atuin|special|atuin|core|Shell history in SQLite + fuzzy search
 tmux|Core CLI|command -v tmux|apt|tmux|core|Terminal multiplexer
 jq|Core CLI|command -v jq|apt|jq|core|Command-line JSON processor
+yq|Core CLI|command -v yq|special|yq|core|jq for YAML (k8s manifests, helm values)
+jnv|Core CLI|command -v jnv|special|jnv|core|Interactive JSON viewer with live jq filtering
+sd|Core CLI|command -v sd|special|sd|core|Intuitive find-and-replace (a friendlier sed)
+tealdeer|Core CLI|command -v tldr|special|tealdeer|core|Fast community cheat-sheets (tldr)
+hyperfine|Core CLI|command -v hyperfine|special|hyperfine|opt|Command-line benchmarking tool
+zellij|Core CLI|command -v zellij|special|zellij|opt|Modern terminal multiplexer (tmux alternative)
+yazi|Core CLI|command -v yazi|special|yazi|opt|Fast terminal file manager with previews
 
 # --- Git & dev ---
 git|Git & dev|command -v git|apt|git|core|Version control
@@ -43,19 +51,28 @@ uv|Python & data|command -v uv|special|uv|core|Fast Python package/venv/tool man
 duckdb|Python & data|command -v duckdb|special|duckdb|opt|In-process SQL over Parquet/CSV/S3
 visidata|Python & data|command -v vd|uv|--with pyarrow --with pandas visidata|opt|Terminal spreadsheet for tabular files (vd)
 s5cmd|Python & data|command -v s5cmd|go|github.com/peak/s5cmd/v2@latest|opt|Fast parallel S3 transfers
+csvlens|Python & data|command -v csvlens|special|csvlens|opt|Fast CSV/TSV viewer in the terminal
 
 # --- Kubernetes ---
 kubectl|Kubernetes|command -v kubectl|special|kubectl|core|The Kubernetes CLI
 helm|Kubernetes|command -v helm|special|helm|core|Kubernetes package manager (charts)
 kustomize|Kubernetes|command -v kustomize|special|kustomize|core|Template-free manifest customization
+kubecolor|Kubernetes|command -v kubecolor|special|kubecolor|core|Colorizes kubectl output (aliased to kubectl)
 k9s|Kubernetes|command -v k9s|special|k9s|opt|TUI cockpit for pods/logs/exec
 stern|Kubernetes|command -v stern|go|github.com/stern/stern@latest|opt|Tail logs across many pods at once
 kubectx|Kubernetes|command -v kubectx|apt|kubectx|opt|Fast context/namespace switching
 
 # --- Monitoring ---
 btop|Monitoring|command -v btop|special|btop|core|CPU/RAM/process/disk TUI monitor
+dust|Monitoring|command -v dust|special|dust|core|Intuitive disk usage (a friendlier du)
+duf|Monitoring|command -v duf|special|duf|core|Disk free/usage overview (a friendlier df)
+procs|Monitoring|command -v procs|special|procs|core|Modern ps with tree/color/search
 nvtop|Monitoring|command -v nvtop|apt|nvtop|opt|htop-style GPU monitor
 nvitop|Monitoring|command -v nvitop|uv|nvitop|opt|Richer GPU/process view
+
+# --- Containers ---
+lazydocker|Containers|command -v lazydocker|special|lazydocker|opt|Full-screen Docker TUI (sibling of lazygit)
+dive|Containers|command -v dive|special|dive|opt|Inspect and shrink Docker image layers
 
 # --- Languages ---
 go|Languages|command -v go|apt|golang-go|opt|Go toolchain (needed by s5cmd/stern)

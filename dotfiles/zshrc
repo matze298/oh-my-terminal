@@ -17,6 +17,9 @@ plugins=(
 )
 source "$ZSH/oh-my-zsh.sh"
 
+# If starship is installed, use it as the prompt (overrides the agnoster theme).
+command -v starship >/dev/null && eval "$(starship init zsh)"
+
 # --- modern coreutils replacements ---
 # eza replaces ls; bat/fd are named bat/fd (upstream) or batcat/fdfind (apt).
 if command -v eza >/dev/null; then
@@ -26,6 +29,7 @@ fi
 if command -v batcat >/dev/null && ! command -v bat >/dev/null; then alias bat='batcat'; fi
 if command -v fdfind >/dev/null && ! command -v fd  >/dev/null; then alias fd='fdfind'; fi
 command -v zoxide >/dev/null && eval "$(zoxide init zsh)"   # `z <frag>` / `zi`
+command -v kubecolor >/dev/null && alias kubectl=kubecolor  # colorized kubectl output
 
 # --- fuzzy finding (fzf + fd) ---
 if [ -f ~/.fzf.zsh ]; then

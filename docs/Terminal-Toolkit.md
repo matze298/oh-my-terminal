@@ -27,7 +27,19 @@ Not part of the portable toolkit. Use Ghostty on **Linux/macOS**; on **WSL** dri
 
 ## Already installed on this box
 
-`zoxide` · `eza` · `bat` (batcat) · `ripgrep` · `tmux` · `jq` · `gh` · `helm` · `kustomize` · `direnv` · `uv` · `btop` · `kubectl`
+`zoxide` · `eza` · `bat` (batcat) · `ripgrep` · `tmux` · `jq` · `yq` · `jnv` · `dust` · `gh` · `helm` · `kustomize` · `direnv` · `uv` · `btop` · `kubectl`
+
+## Worth trying next
+
+Extras beyond the core notes, grouped by what they help with (full descriptions in [[Setup-Inventory]]):
+
+- **Shell & prompt**: `starship` (fast cross-shell prompt: git, k8s context, venv).
+- **Text & data**: `yq` (jq for YAML), `jnv` (interactive JSON), `sd` (friendlier sed), `csvlens` (CSV viewer), `hyperfine` (benchmarking).
+- **System**: `dust`/`duf` (disk usage/free), `procs` (modern ps).
+- **Kubernetes**: `kubecolor` (colorized `kubectl`).
+- **Containers**: `lazydocker` (Docker TUI), `dive` (image-layer inspector).
+- **Sessions & files**: `zellij` (tmux alternative), `yazi` (file manager).
+- **Discovery**: `tealdeer` (`tldr` cheat-sheets).
 
 ## Optional
 

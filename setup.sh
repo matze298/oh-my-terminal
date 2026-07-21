@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # oh-my-terminal — reproduce a portable zsh + CLI toolkit on a fresh machine.
 #
-# Usage: ./setup.sh [--dry-run] [--all|--core] [--yes] [-h|--help]
+# Usage: ./setup.sh [--dry-run] [--all|--core] [--upgrade] [--yes] [-h|--help]
 #   --dry-run  show what would be installed/changed, touch nothing
 #   --all      select every not-yet-installed tool (non-interactive)
 #   --core     select only the recommended core tier (non-interactive)
+#   --upgrade  also (re)install already-installed tools, to move them to latest
 #   --yes      skip confirmation and identity prompts (use detected defaults)
 #
 # Ghostty (the terminal emulator) is NOT installed here; see ghostty/.
@@ -24,9 +25,9 @@ source "$REPO_DIR/lib/ui.sh"
 # shellcheck source=lib/dotfiles.sh
 source "$REPO_DIR/lib/dotfiles.sh"
 
-DRY_RUN=0; ASSUME_YES=0; SELECT_MODE=interactive
+DRY_RUN=0; ASSUME_YES=0; UPGRADE=0; SELECT_MODE=interactive
 
-usage() { sed -n '2,12p' "$REPO_DIR/setup.sh" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '/^# Usage:/,/^# Ghostty/p' "$REPO_DIR/setup.sh" | sed 's/^# \{0,1\}//'; }
 
 parse_args() {
   while [ $# -gt 0 ]; do
@@ -34,6 +35,7 @@ parse_args() {
       --dry-run) DRY_RUN=1 ;;
       --all)     SELECT_MODE=all ;;
       --core)    SELECT_MODE=core ;;
+      --upgrade) UPGRADE=1 ;;
       --yes|-y)  ASSUME_YES=1 ;;
       -h|--help) usage; exit 0 ;;
       *) err "unknown option: $1"; usage; exit 2 ;;
@@ -91,11 +93,12 @@ apply_selection() {
 }
 
 # Non-interactive selection used by --all/--core and the no-TTY fallback.
+# With --upgrade, already-installed tools stay eligible (reinstalled to latest).
 _ui_set_all_from_defaults() {  # all|core
   local mode=$1 i
   SELECTED=()
   for i in "${!IDS[@]}"; do
-    if [ "${INSTALLED[$i]}" = 1 ]; then SELECTED[$i]=0
+    if [ "${INSTALLED[$i]}" = 1 ] && [ "$UPGRADE" != 1 ]; then SELECTED[$i]=0
     elif [ "$mode" = all ]; then SELECTED[$i]=1
     elif [ "${DEFAULTS[$i]}" = core ]; then SELECTED[$i]=1
     else SELECTED[$i]=0; fi
@@ -105,10 +108,12 @@ _ui_set_all_from_defaults() {  # all|core
 show_plan() {
   local i any=0 needs_go=0 needs_uv=0
   info "Plan"
+  local verb
   for i in "${!IDS[@]}"; do
     [ "${SELECTED[$i]}" = 1 ] || continue
     any=1
-    printf '  %sinstall%s %-14s %s(%s)%s\n' "$C_GREEN" "$C_RESET" "${IDS[$i]}" "$C_DIM" "${METHODS[$i]}" "$C_RESET"
+    if [ "${INSTALLED[$i]}" = 1 ]; then verb="upgrade"; else verb="install"; fi
+    printf '  %s%-7s%s %-14s %s(%s)%s\n' "$C_GREEN" "$verb" "$C_RESET" "${IDS[$i]}" "$C_DIM" "${METHODS[$i]}" "$C_RESET"
     [ "${METHODS[$i]}" = go ] && needs_go=1
     [ "${METHODS[$i]}" = uv ] && needs_uv=1
   done
@@ -156,10 +161,37 @@ post_steps() {
       case "$ans" in y|Y) chsh -s "$(command -v zsh)" && ok "default shell set to zsh (takes effect on next login)" ;; esac
     fi
   fi
-  # gh auth hint.
-  if command -v gh >/dev/null 2>&1 && ! gh auth status --hostname github.com >/dev/null 2>&1; then
-    step "authenticate GitHub: gh auth login --hostname github.com  &&  gh auth setup-git"
+  github_auth_step
+}
+
+# Guide the user to authenticate the GitHub CLI so the git credential helper
+# works. Confirms first, and respects a choice to stay unauthenticated.
+github_auth_step() {
+  command -v gh >/dev/null 2>&1 || return 0
+
+  if [ -n "${GH_HOST:-}" ] && [ "$GH_HOST" != github.com ]; then
+    warn "GH_HOST=$GH_HOST — gh targets this host by default; use 'gh auth login --hostname github.com' for public GitHub."
   fi
+
+  if gh auth status >/dev/null 2>&1; then
+    step "GitHub CLI already authenticated; ensuring git credential helper"
+    [ "$DRY_RUN" = 1 ] || gh auth setup-git >/dev/null 2>&1 || true
+    return 0
+  fi
+
+  if [ "$DRY_RUN" = 1 ]; then step "would offer to run 'gh auth login'"; return 0; fi
+  if [ "$ASSUME_YES" = 1 ] || [ ! -t 0 ]; then
+    step "authenticate GitHub later: gh auth login  &&  gh auth setup-git"
+    return 0
+  fi
+
+  local host="${GH_HOST:-github.com}" ans
+  printf '\nAuthenticate the GitHub CLI now for host %s? [Y/n]  (public GitHub: gh auth login --hostname github.com) ' "$host"
+  read -r ans
+  case "$ans" in
+    n|N) warn "continuing without GitHub auth — HTTPS access to private repos will prompt for credentials until you run 'gh auth login'" ;;
+    *)   gh auth login && gh auth setup-git && ok "GitHub authenticated" ;;
+  esac
 }
 
 summary() {

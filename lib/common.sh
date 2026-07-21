@@ -37,6 +37,7 @@ detect_platform() {
   #   RUST_TRIPLE - Rust tool release names (x86_64-unknown-linux-gnu, ...)
   #   BTOP_ARCH   - btop release names      (x86_64-linux-musl, ...)
   DEB_ARCH="$(dpkg --print-architecture 2>/dev/null || echo amd64)"
+  ARCH_M="$(uname -m)"          # x86_64 / aarch64 — as many projects name assets
   case "$(uname -m)" in
     x86_64)
       REL_ARCH=x86_64; RUST_TRIPLE=x86_64-unknown-linux-gnu; BTOP_ARCH=x86_64-linux-musl ;;

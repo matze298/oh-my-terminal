@@ -26,12 +26,15 @@ After it finishes, restart your terminal (or `exec zsh`).
 Grouped by category in [`lib/tools.manifest`](lib/tools.manifest):
 
 - **Shell foundation** (core): zsh, oh-my-zsh, agnoster prompt, FiraCode Nerd
-  Font, zsh-autosuggestions, zsh-syntax-highlighting
-- **Core CLI** (core): zoxide, eza, bat, ripgrep, fd, fzf, atuin, tmux, jq
+  Font, zsh-autosuggestions, zsh-syntax-highlighting; starship (opt)
+- **Core CLI** (core): zoxide, eza, bat, ripgrep, fd, fzf, atuin, tmux, jq, yq,
+  jnv, sd, tealdeer; hyperfine, zellij, yazi (opt)
 - **Git & dev**: git, git-lfs, gh, direnv, delta (core); lazygit, just (opt)
-- **Python & data**: uv (core); duckdb, visidata, s5cmd (opt)
-- **Kubernetes**: kubectl, helm, kustomize (core); k9s, stern, kubectx (opt)
-- **Monitoring**: btop (core); nvtop, nvitop (opt)
+- **Python & data**: uv (core); duckdb, visidata, s5cmd, csvlens (opt)
+- **Kubernetes**: kubectl, helm, kustomize, kubecolor (core); k9s, stern,
+  kubectx (opt)
+- **Monitoring**: btop, dust, duf, procs (core); nvtop, nvitop (opt)
+- **Containers**: lazydocker, dive (opt)
 - **Languages**: Go (auto-installed when an opt tool needs it)
 
 Tools are pulled from their latest stable upstream release wherever the apt build
@@ -44,11 +47,13 @@ kubectx) or a source build would be heavy (zsh, git, tmux, go).
 ./setup.sh --dry-run   # show the plan, install/change nothing
 ./setup.sh --core      # non-interactive: core tier only
 ./setup.sh --all       # non-interactive: every not-yet-installed tool
+./setup.sh --upgrade   # also (re)install already-installed tools, to move them to latest
 ./setup.sh --yes       # skip confirmation + identity prompts (use detected defaults)
 ```
 
 Re-running is safe: installed tools are detected and skipped, so `setup.sh`
-doubles as an updater. Start with `--dry-run` to preview.
+doubles as an updater. Add `--upgrade` to also refresh tools you already have to
+their latest release. Start with `--dry-run` to preview.
 
 ## Configuration
 
@@ -68,8 +73,11 @@ clean and portable:
 - `~/.zshrc.local` (optional, e.g. `export GH_HOST=your-org.ghe.com`) — created
   from [`dotfiles/zshrc.local.template`](dotfiles/zshrc.local.template) if you opt in
 
-After install, authenticate GitHub once: `gh auth login` then
-`gh auth setup-git`.
+After installing, the script offers to authenticate the GitHub CLI (`gh auth
+login` + `gh auth setup-git`) so the git credential helper works. You can
+decline and stay unauthenticated. If your environment sets `GH_HOST` to a
+GitHub Enterprise host, `gh` targets that by default, use
+`gh auth login --hostname github.com` for public GitHub.
 
 ## Ghostty (optional)
 
